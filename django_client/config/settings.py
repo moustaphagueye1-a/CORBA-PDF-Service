@@ -89,6 +89,7 @@ CORBA_SERVER_HOST = os.environ.get('CORBA_SERVER_HOST', 'corba-server')
 CORBA_SERVER_PORT = int(os.environ.get('CORBA_SERVER_PORT', '1050'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Configuration pour Render
 import os
 if not DEBUG:
     ALLOWED_HOSTS = ['*']  # Render gère le domaine en HTTPS
