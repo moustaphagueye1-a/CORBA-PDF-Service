@@ -1,5 +1,3 @@
-
-```sh
 #!/bin/sh
 set -e
 
@@ -22,3 +20,13 @@ while ! nc -z "$HOST" "$PORT" 2>/dev/null; do
 done
 echo ""
 echo "[OK] Pont HTTP joignable"
+
+# Migrations Django
+python manage.py migrate --noinput
+echo "[OK] Migrations appliquées"
+
+echo ""
+echo "  ✅ Django prêt — http://0.0.0.0:8000"
+echo ""
+
+exec python manage.py runserver 0.0.0.0:8000
