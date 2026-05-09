@@ -6,7 +6,7 @@ services:
   - type: web
     name: corba-pdf-service
     runtime: docker
-    dockerfilePath: ./render-deploy/render-single/Dockerfile
+    dockerfilePath: ./render-single/Dockerfile
     dockerContext: .
     plan: free
     envVars:
