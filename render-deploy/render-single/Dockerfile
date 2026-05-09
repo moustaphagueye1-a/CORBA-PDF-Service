@@ -58,8 +58,7 @@ RUN mkdir -p /app/media/results /app/media/uploads \
     python manage.py collectstatic --noinput 2>/dev/null || true
 
 # Script de démarrage unique
-COPY render-single/start.sh /start.sh
-RUN chmod +x /start.sh
+
 
 EXPOSE 8000
 
@@ -69,4 +68,4 @@ ENV BRIDGE_PORT=8080
 ENV CORBA_IOR_FILE=/shared/pdfservice.ior
 ENV JAVA_OPTS="-Xms64m -Xmx200m -Djava.awt.headless=true"
 
-CMD  ["sh", "-c", "cd /app && python manage.py migrate --noinput && java -Xms64m -Xmx200m -Djava.awt.headless=true -Dcom.sun.CORBA.ORBServerHost=localhost -Dcom.sun.CORBA.ORBServerPort=1050 -jar /app/server.jar & exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 1 --timeout 120"]
+CMD ["sh","-c","cd /app && python manage.py migrate --noinput && java -Xms64m -Xmx200m -Djava.awt.headless=true -Dcom.sun.CORBA.ORBServerHost=localhost -Dcom.sun.CORBA.ORBServerPort=1050 -jar /app/server.jar & exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-10000} --workers 1 --timeout 120"]
