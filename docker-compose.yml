@@ -1,0 +1,55 @@
+services:
+  corba-server:
+    build:
+      context: .
+      dockerfile: server_java/Dockerfile
+    container_name: corba-pdf-server
+    hostname: corba-server
+    ports:
+      - "1050:1050"
+      - "8080:8080"
+    environment:
+      CORBA_SERVER_HOST: corba-server
+      JAVA_OPTS: "-Xms256m -Xmx512m -Djava.awt.headless=true"
+    volumes:
+      - shared_ior:/shared
+    networks:
+      - corba_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /shared/pdfservice.ior"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 90s
+
+  django-client:
+    build:
+      context: .
+      dockerfile: django_client/Dockerfile
+    container_name: corba-pdf-django
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+      DJANGO_SECRET_KEY: "corba-pdf-secret-key-agrotic-ussein"
+      DEBUG: "True"
+      CORBA_SERVER_HOST: corba-server
+      BRIDGE_PORT: "8080"
+    volumes:
+      - shared_ior:/shared
+      - django_media:/app/media
+    depends_on:
+      corba-server:
+        condition: service_healthy
+    networks:
+      - corba_net
+    restart: unless-stopped
+
+volumes:
+  shared_ior:
+  django_media:
+
+networks:
+  corba_net:
+    driver: bridge

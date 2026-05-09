@@ -1,0 +1,28 @@
+{% extends 'pdfapp/base.html' %}
+{% block title %}Fusion PDF{% endblock %}
+{% block content %}
+<div style="max-width:640px">
+<div class="d-flex align-items-center gap-2 mb-1">
+  <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+  <h1 class="page-title mb-0">🔗 Fusion de PDFs</h1>
+</div>
+<p class="page-subtitle">Combiner deux documents PDF en un seul fichier</p>
+<div class="card"><div class="card-header-custom"><h4>Fusion PDF</h4><p>Sélectionnez les deux PDFs à fusionner</p></div>
+<div class="card-body p-4">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Premier PDF</label>
+    <div class="upload-zone"><div class="upload-icon">📄</div>
+    <div class="fw-semibold upload-filename">Cliquez ou glissez votre fichier ici</div>
+    <div style="color:#94a3b8;font-size:0.8rem;margin-top:0.25rem">Format PDF accepté</div>
+    <input type="file" name="pdf1" accept=".pdf" required></div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Deuxième PDF</label>
+    <div class="upload-zone"><div class="upload-icon">📄</div>
+    <div class="fw-semibold upload-filename">Cliquez ou glissez votre fichier ici</div>
+    <div style="color:#94a3b8;font-size:0.8rem;margin-top:0.25rem">Format PDF accepté</div>
+    <input type="file" name="pdf2" accept=".pdf" required></div>
+  </div>
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-play-fill"></i> Fusionner via CORBA</button>
+</form></div></div></div>{% endblock %}

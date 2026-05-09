@@ -1,0 +1,140 @@
+// ================================================================
+//  PDFService.idl — Interface CORBA du Service de Manipulation PDF
+//  Projet Académique — Systèmes Distribués CORBA
+//  Technologies : Java (Serveur) + Python/Django (Client)
+// ================================================================
+
+module PDFService {
+
+    // --- Types de données fondamentaux ---
+
+    /// Données binaires d'un document PDF (ou image PNG)
+    typedef sequence<octet> ByteArray;
+
+    /// Liste de chaînes (résultats de recherche, etc.)
+    typedef sequence<string> StringList;
+
+    /// Liste d'entiers longs (numéros de pages, ordre, etc.)
+    typedef sequence<long> LongList;
+
+    // ----------------------------------------------------------------
+    //  Structure : métadonnées et statistiques d'un document PDF
+    // ----------------------------------------------------------------
+    struct PDFInfo {
+        long   pageCount;     // Nombre total de pages
+        long   wordCount;     // Nombre de mots estimé
+        long   fileSize;      // Taille du fichier en octets
+        string title;         // Titre du document (métadonnées)
+        string author;        // Auteur du document
+        string subject;       // Sujet / description
+        string creator;       // Application ayant créé le PDF
+        string creationDate;  // Date de création (format string)
+    };
+
+    // ----------------------------------------------------------------
+    //  Exception personnalisée pour toutes les erreurs PDF
+    // ----------------------------------------------------------------
+    exception PDFException {
+        string message;  // Description détaillée de l'erreur
+    };
+
+    // ================================================================
+    //  Interface principale : PDFManager
+    //  Contient toutes les opérations distantes (RPC via IIOP)
+    // ================================================================
+    interface PDFManager {
+
+        // ============================================================
+        //  BLOC 1 — Opérations de Base
+        // ============================================================
+
+        /// Fusion de deux documents PDF en un seul document
+        ByteArray mergePDFs(
+            in ByteArray pdf1,
+            in ByteArray pdf2
+        ) raises (PDFException);
+
+        /// Découpage d'un PDF : extraire les pages [fromPage … toPage] (1-indexé)
+        ByteArray splitPDF(
+            in ByteArray pdf,
+            in long fromPage,
+            in long toPage
+        ) raises (PDFException);
+
+        /// Extraction de pages spécifiques vers un nouveau document
+        ByteArray extractPages(
+            in ByteArray pdf,
+            in LongList pageNumbers
+        ) raises (PDFException);
+
+        /// Suppression de pages spécifiques (les autres sont conservées)
+        ByteArray deletePages(
+            in ByteArray pdf,
+            in LongList pageNumbers
+        ) raises (PDFException);
+
+        /// Extraction du texte brut intégral du document
+        string extractText(
+            in ByteArray pdf
+        ) raises (PDFException);
+
+        /// Création d'un nouveau PDF à partir d'un contenu textuel
+        ByteArray createPDF(
+            in string content,
+            in string title
+        ) raises (PDFException);
+
+        /// Protection par mot de passe (chiffrement AES-256)
+        ByteArray addPassword(
+            in ByteArray pdf,
+            in string userPassword,
+            in string ownerPassword
+        ) raises (PDFException);
+
+        /// Conversion d'une page PDF en image PNG (résolution configurable)
+        ByteArray convertToImage(
+            in ByteArray pdf,
+            in long pageNumber,
+            in long dpi
+        ) raises (PDFException);
+
+        // ============================================================
+        //  BLOC 2 — Fonctionnalités Avancées
+        // ============================================================
+
+        /// Recherche d'un mot-clé : retourne le contexte par page trouvée
+        StringList searchText(
+            in ByteArray pdf,
+            in string keyword
+        ) raises (PDFException);
+
+        /// Ajout d'un filigrane diagonal semi-transparent sur chaque page
+        ByteArray addWatermark(
+            in ByteArray pdf,
+            in string watermarkText
+        ) raises (PDFException);
+
+        /// Récupération des métadonnées et statistiques complètes
+        PDFInfo getPDFInfo(
+            in ByteArray pdf
+        ) raises (PDFException);
+
+        /// Compression du document (réduction de la taille)
+        ByteArray compressPDF(
+            in ByteArray pdf
+        ) raises (PDFException);
+
+        /// Rotation d'une page (90, 180 ou 270 degrés)
+        ByteArray rotatePage(
+            in ByteArray pdf,
+            in long pageNumber,
+            in long degrees
+        ) raises (PDFException);
+
+        /// Réorganisation des pages selon un ordre personnalisé
+        ByteArray reorderPages(
+            in ByteArray pdf,
+            in LongList newOrder
+        ) raises (PDFException);
+    };
+};

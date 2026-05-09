@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart PDF Service{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-w: 260px;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+
+        /* Navigation */
+        .topbar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; height: 64px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 1.5rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+        }
+
+        .sidebar {
+            width: var(--sidebar-w); background: white; border-right: 1px solid var(--border);
+            position: fixed; top: 64px; left: 0; bottom: 0; z-index: 900; padding: 1rem 0; overflow-y: auto;
+        }
+
+        .sidebar-link {
+            display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 1.2rem;
+            color: var(--text); text-decoration: none; font-size: 0.88rem; transition: 0.2s;
+        }
+        .sidebar-link:hover, .sidebar-link.active { background: #eff6ff; color: var(--primary); border-right: 3px solid var(--primary); }
+        .sidebar-section { padding: 1.2rem 1.2rem 0.4rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+
+        .main-content { margin-left: var(--sidebar-w); margin-top: 64px; padding: 2rem; }
+
+        /* --- STYLISATION DES FORMULAIRES --- */
+        .card-form {
+            background: white; border: 1px solid var(--border); border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 2rem;
+        }
+
+        .form-label { font-weight: 600; margin-bottom: 0.5rem; display: block; }
+        
+        .upload-zone {
+            border: 2px dashed #cbd5e1; background: #f1f5f9; border-radius: 10px;
+            padding: 1.5rem; text-align: center; transition: 0.3s; cursor: pointer;
+        }
+        .upload-zone:hover { border-color: var(--primary); background: #eff6ff; }
+        
+        input[type="file"] { width: 100%; color: var(--text-muted); }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 1rem; border-radius: 8px;
+            font-weight: 700; width: 100%; margin-top: 1rem; transition: 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); color: white; }
+
+        /* Status */
+        .status-badge { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .connected { background: #4ade80; }
+
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="text-white text-decoration-none fw-bold">📄 Smart PDF Service</a>
+    <div class="status-badge">
+        <span class="status-dot connected"></span> Système Opérationnel
+    </div>
+</header>
+
+<nav class="sidebar">
+    <a href="/" class="sidebar-link">🏠 Accueil</a>
+    
+    <div class="sidebar-section">Gestion des Pages</div>
+    <a href="/merge/" class="sidebar-link active">🔗 Fusionner</a>
+    <a href="/split/" class="sidebar-link">✂️ Découper</a>
+    <a href="/delete-pages/" class="sidebar-link">🗑️ Suppression pages</a>
+    <a href="/rotate/" class="sidebar-link">🔄 Rotation</a>
+    <a href="/reorder/" class="sidebar-link">🔀 Réorganisation</a>
+
+    <div class="sidebar-section">Conversion & Contenu</div>
+    <a href="/create-pdf/" class="sidebar-link">✨ Nouveau PDF</a>
+    <a href="/extract-text/" class="sidebar-link">📝 Extraction texte</a>
+    <a href="/pdf-to-image/" class="sidebar-link">🖼️ PDF → Image</a>
+    <a href="/search/" class="sidebar-link">🔍 Recherche texte</a>
+
+    <div class="sidebar-section">Sécurité & Optimisation</div>
+    <a href="/password/" class="sidebar-link">🔐 Mot de passe</a>
+    <a href="/watermark/" class="sidebar-link">💧 Filigrane</a>
+    <a href="/compress/" class="sidebar-link">📦 Compression</a>
+    <a href="/info/" class="sidebar-link">📊 Statistiques</a>
+</nav>
+
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

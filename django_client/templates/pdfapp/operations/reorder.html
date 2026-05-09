@@ -1,0 +1,25 @@
+{% extends 'pdfapp/base.html' %}
+{% block title %}Réorganisation des pages{% endblock %}
+{% block content %}
+<div style="max-width:640px">
+<div class="d-flex align-items-center gap-2 mb-1">
+  <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+  <h1 class="page-title mb-0">🔀 Réorganisation des pages</h1>
+</div>
+<p class="page-subtitle">Changer l'ordre des pages selon votre choix</p>
+<div class="card"><div class="card-header-custom"><h4>Réorganisation</h4><p>Spécifiez le nouvel ordre des pages</p></div>
+<div class="card-body p-4">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Fichier PDF</label>
+    <div class="upload-zone"><div class="upload-icon">🔀</div>
+    <div class="fw-semibold upload-filename">Cliquez ou glissez votre fichier ici</div>
+    <input type="file" name="pdf" accept=".pdf" required></div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Nouvel ordre des pages</label>
+    <input type="text" class="form-control" name="order" placeholder="Ex: 3, 1, 2, 5, 4" required>
+    <div class="form-text">Entrez les numéros de pages dans le nouvel ordre. Ex: pour un PDF de 3 pages, <code>3,1,2</code> met la page 3 en premier.</div>
+  </div>
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-play-fill"></i> Réorganiser via CORBA</button>
+</form></div></div></div>{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'pdfapp/base.html' %}
+{% block title %}Rotation de page{% endblock %}
+{% block content %}
+<div style="max-width:640px">
+<div class="d-flex align-items-center gap-2 mb-1">
+  <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+  <h1 class="page-title mb-0">🔄 Rotation de page</h1>
+</div>
+<p class="page-subtitle">Pivoter une page de 90°, 180° ou 270°</p>
+<div class="card"><div class="card-header-custom"><h4>Rotation de page</h4><p>Sélectionnez la page et l'angle de rotation</p></div>
+<div class="card-body p-4">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Fichier PDF</label>
+    <div class="upload-zone"><div class="upload-icon">🔄</div>
+    <div class="fw-semibold upload-filename">Cliquez ou glissez votre fichier ici</div>
+    <input type="file" name="pdf" accept=".pdf" required></div>
+  </div>
+  <div class="row g-3 mb-3">
+    <div class="col-6">
+      <label class="form-label fw-semibold">Numéro de page</label>
+      <input type="number" class="form-control" name="page_number" value="1" min="1" required>
+    </div>
+    <div class="col-6">
+      <label class="form-label fw-semibold">Angle de rotation</label>
+      <select class="form-select" name="degrees">
+        <option value="90">90° (droite)</option>
+        <option value="180">180° (retournement)</option>
+        <option value="270">270° (gauche)</option>
+      </select>
+    </div>
+  </div>
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-play-fill"></i> Pivoter via CORBA</button>
+</form></div></div></div>{% endblock %}

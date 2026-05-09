@@ -1,0 +1,41 @@
+{% extends 'pdfapp/base.html' %}
+{% block title %}{{ op_title }} — CORBA PDF{% endblock %}
+
+{% block content %}
+<div style="max-width:640px">
+    <div class="d-flex align-items-center gap-2 mb-1">
+        <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+        <h1 class="page-title mb-0">{{ op_icon }} {{ op_title }}</h1>
+    </div>
+    <p class="page-subtitle">{{ op_desc }}</p>
+
+    <div class="card">
+        <div class="card-header-custom">
+            <h4>{{ op_title }}</h4>
+            <p>{{ op_desc }}</p>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% block form_fields %}{% endblock %}
+                <div class="mt-4">
+                    <button type="submit" class="btn-primary-custom">
+                        <i class="bi bi-play-fill"></i> Exécuter via CORBA
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Info CORBA -->
+    <div class="card mt-3" style="border:none;background:#f8fafc">
+        <div class="card-body py-2 px-3">
+            <small style="color:#64748b">
+                <i class="bi bi-info-circle"></i>
+                Cette opération est exécutée à distance sur le <strong>serveur Java CORBA</strong>
+                via le protocole <strong>IIOP</strong> avec Apache <strong>PDFBox</strong>.
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
