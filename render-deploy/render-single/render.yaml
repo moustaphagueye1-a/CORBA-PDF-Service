@@ -1,0 +1,30 @@
+# render.yaml — Déploiement automatique sur Render.com
+# Placer ce fichier à la RACINE du dépôt GitHub
+# Render le détecte automatiquement et crée les services
+
+services:
+  - type: web
+    name: corba-pdf-service
+    runtime: docker
+    dockerfilePath: ./render-single/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true          # Render génère une clé aléatoire automatiquement
+      - key: DEBUG
+        value: "False"
+      - key: CORBA_SERVER_HOST
+        value: localhost
+      - key: BRIDGE_PORT
+        value: "8080"
+      - key: CORBA_IOR_FILE
+        value: /shared/pdfservice.ior
+      - key: JAVA_OPTS
+        value: "-Xms64m -Xmx200m -Djava.awt.headless=true"
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+    disk:
+      name: media-storage
+      mountPath: /app/media
+      sizeGB: 1
