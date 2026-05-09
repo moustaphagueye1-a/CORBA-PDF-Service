@@ -1,6 +1,6 @@
-# render.yaml — Déploiement automatique sur Render.com (plan gratuit)
-# Les fichiers media sont temporaires sur le plan free (perdus au redémarrage)
-# Pour la persistance, passer au plan Starter ($7/mois) et ajouter un disk
+# render.yaml — Déploiement automatique sur Render.com
+# Placer ce fichier à la RACINE du dépôt GitHub
+# Render le détecte automatiquement et crée les services
 
 services:
   - type: web
@@ -11,7 +11,7 @@ services:
     plan: free
     envVars:
       - key: DJANGO_SECRET_KEY
-        generateValue: true
+        generateValue: true          # Render génère une clé aléatoire automatiquement
       - key: DEBUG
         value: "False"
       - key: CORBA_SERVER_HOST
@@ -24,3 +24,7 @@ services:
         value: "-Xms64m -Xmx200m -Djava.awt.headless=true"
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
+    disk:
+      name: media-storage
+      mountPath: /app/media
+      sizeGB: 1
