@@ -1,19 +1,24 @@
+
+```sh
 #!/bin/sh
 set -e
-HOST="${CORBA_SERVER_HOST:-corba-server}"
+
+HOST="${CORBA_SERVER_HOST:-corba-pdf-server}"
 PORT=8080
-MAX=120
+MAX=180
 W=0
-echo "══════════════════════════════════════"
-echo "  CORBA PDF Service — Django"
-echo "══════════════════════════════════════"
+
+echo "══════════════════════════════════════════════"
+echo "  CORBA PDF Service — Démarrage Django"
+echo "══════════════════════════════════════════════"
+
+# Attendre uniquement le port HTTP du pont Java
 echo "[WAIT] Pont HTTP Java ($HOST:$PORT)..."
 while ! nc -z "$HOST" "$PORT" 2>/dev/null; do
-    [ $W -ge $MAX ] && echo "[ERR] Timeout" && exit 1
-    printf "."; sleep 2; W=$((W+2))
+    [ $W -ge $MAX ] && echo "[ERR] Timeout après ${MAX}s" && exit 1
+    printf "."
+    sleep 3
+    W=$((W + 3))
 done
-echo ""; echo "[OK] Pont HTTP joignable"
-python manage.py migrate --noinput
-echo "[OK] Migrations appliquées"
-echo ""; echo "  ✅ http://localhost:8000"; echo ""
-exec python manage.py runserver 0.0.0.0:8000
+echo ""
+echo "[OK] Pont HTTP joignable"
