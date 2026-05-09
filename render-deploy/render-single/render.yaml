@@ -7,8 +7,7 @@ services:
     plan: free
     # Forcer Render à utiliser le port 8000 (Django), pas 8080 (Java)
     envVars:
-      - key: PORT
-        value: "8000"
+      
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DEBUG
