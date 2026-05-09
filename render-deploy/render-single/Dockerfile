@@ -69,4 +69,4 @@ ENV BRIDGE_PORT=8080
 ENV CORBA_IOR_FILE=/shared/pdfservice.ior
 ENV JAVA_OPTS="-Xms64m -Xmx200m -Djava.awt.headless=true"
 
-CMD ["/start.sh"]
+CMD  ["sh", "-c", "cd /app && python manage.py migrate --noinput && java -Xms64m -Xmx200m -Djava.awt.headless=true -Dcom.sun.CORBA.ORBServerHost=localhost -Dcom.sun.CORBA.ORBServerPort=1050 -jar /app/server.jar & exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 1 --timeout 120"]
