@@ -5,20 +5,28 @@ services:
     dockerfilePath: ./render-single/Dockerfile
     dockerContext: .
     plan: free
-    # Forcer Render à utiliser le port 8000 (Django), pas 8080 (Java)
+
     envVars:
-      
       - key: DJANGO_SECRET_KEY
         generateValue: true
+
       - key: DEBUG
         value: "False"
+
       - key: CORBA_SERVER_HOST
-        value: localhost
+        value: 127.0.0.1
+
       - key: BRIDGE_PORT
         value: "8080"
+
       - key: CORBA_IOR_FILE
         value: /shared/pdfservice.ior
+
       - key: JAVA_OPTS
         value: "-Xms64m -Xmx200m -Djava.awt.headless=true"
+
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
+
+      - key: PORT
+        value: "8000"
