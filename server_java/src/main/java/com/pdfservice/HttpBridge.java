@@ -21,7 +21,13 @@ public class HttpBridge {
     }
 
     public void start() throws IOException {
-        httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+        // ============================================================
+        // IMPORTANT : écouter sur 127.0.0.1 uniquement (pas 0.0.0.0)
+        // Cela rend le port 8080 invisible pour Render.com
+        // Render ne voit que Gunicorn sur $PORT → route vers Django ✅
+        // ============================================================
+        httpServer = HttpServer.create(new InetSocketAddress("127.0.0.1", 8080), 0);
+
         httpServer.createContext("/merge",         new MergeHandler());
         httpServer.createContext("/split",         new SplitHandler());
         httpServer.createContext("/extract-pages", new ExtractPagesHandler());
@@ -39,12 +45,11 @@ public class HttpBridge {
         httpServer.createContext("/status",        new StatusHandler());
         httpServer.setExecutor(java.util.concurrent.Executors.newFixedThreadPool(4));
         httpServer.start();
-        System.out.println("[HTTP] Pont HTTP démarré sur le port 8080");
+        System.out.println("[HTTP] Pont HTTP démarré sur 127.0.0.1:8080 (interne uniquement)");
     }
 
     // ── Utilitaires ───────────────────────────────────────────────
 
-    /** Lit le corps HTTP — compatible Java 8 (pas de readAllBytes) */
     private static String readBody(HttpExchange ex) throws IOException {
         InputStream is = ex.getRequestBody();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
