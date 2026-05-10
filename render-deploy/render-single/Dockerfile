@@ -1,10 +1,10 @@
-# ================================================================
-#  Dockerfile UNIQUE — Java 8 + Django — Render.com
-#  Pas de start.sh externe — CMD inline pour éviter les problèmes
+﻿# ================================================================
+#  Dockerfile UNIQUE â€” Java 8 + Django â€” Render.com
+#  Pas de start.sh externe â€” CMD inline pour Ã©viter les problÃ¨mes
 #  de chemin et de CRLF Windows
 # ================================================================
 
-# ── Stage 1 : Compilation Java ───────────────────────────────────
+# â”€â”€ Stage 1 : Compilation Java â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 FROM maven:3.8.6-openjdk-8 AS builder
 
 WORKDIR /build
@@ -17,7 +17,7 @@ RUN mkdir -p src/main/java && idlj -fall -td src/main/java PDFService.idl
 COPY server_java/src/main/java/com/pdfservice/ src/main/java/com/pdfservice/
 RUN mvn package -DskipTests -q && ls -lh target/corba-pdf-server-1.0.jar
 
-# ── Stage 2 : Runtime Python + JRE 8 ────────────────────────────
+# â”€â”€ Stage 2 : Runtime Python + JRE 8 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 FROM eclipse-temurin:8-jre-focal
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && java -version && python3.11 --version
 
-# Dépendances Python
+# DÃ©pendances Python
 WORKDIR /app
 COPY django_client/requirements.txt .
 RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
@@ -55,8 +55,9 @@ ENV BRIDGE_PORT=8080
 ENV CORBA_IOR_FILE=/shared/pdfservice.ior
 ENV JAVA_OPTS="-Xms64m -Xmx200m -Djava.awt.headless=true"
 
-# ── CMD INLINE : pas de fichier externe, pas de problème CRLF ────
+# â”€â”€ CMD INLINE : pas de fichier externe, pas de problÃ¨me CRLF â”€â”€â”€â”€
 # 1. Migrations Django
-# 2. Java en arrière-plan (127.0.0.1 = invisible pour Render)
-# 3. Gunicorn au premier plan sur $PORT (détecté par Render)
+# 2. Java en arriÃ¨re-plan (127.0.0.1 = invisible pour Render)
+# 3. Gunicorn au premier plan sur $PORT (dÃ©tectÃ© par Render)
 CMD ["sh", "-c", "cd /app && python3.11 manage.py migrate --noinput && java $JAVA_OPTS -Dcom.sun.CORBA.ORBServerHost=localhost -Dcom.sun.CORBA.ORBServerPort=1050 -jar /app/server.jar & exec python3.11 -m gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-10000} --workers 1 --timeout 120"]
+CMD ["sh","-c","cd /app && python3.11 manage.py migrate --noinput && java -Xms64m -Xmx200m -Djava.awt.headless=true -Dcom.sun.CORBA.ORBServerHost=localhost -Dcom.sun.CORBA.ORBServerPort=1050 -jar /app/server.jar & exec python3.11 -m gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-10000} --workers 1 --timeout 120"]
